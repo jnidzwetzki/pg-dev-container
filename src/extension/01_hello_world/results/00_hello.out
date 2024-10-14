@@ -1,0 +1,18 @@
+SELECT hello_world('Mr. X');
+ hello_world 
+-------------
+ Hello Mr. X
+(1 row)
+
+SELECT * FROM hello_world('Mr. X');
+ hello_world 
+-------------
+ Hello Mr. X
+(1 row)
+
+SELECT hello_world(NULL);
+ hello_world 
+-------------
+ 
+(1 row)
+
