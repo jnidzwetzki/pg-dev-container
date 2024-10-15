@@ -21,7 +21,7 @@ Afterward, VSCode downloads the needed base container image, installs the tools,
 
 ## First Start
 
-After the container is built, the PostgreSQL source code that is part of the development container should be added to VSCode. This allows it to browse the source code and perform full-text search from VSCode as well. To import the source code, a new terminal should be opened and the following command can be executed:
+After the container is built, the PostgreSQL source code that is part of the development container should be added to VSCode. This allows it to browse the source code and perform full-text search from VSCode as well. To import the source code, a new terminal should be opened and the following command should be executed:
 
 ```
 code --add /usr/local/src/postgresql
