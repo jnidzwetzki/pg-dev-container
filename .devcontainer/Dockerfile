@@ -18,3 +18,5 @@ RUN apt update \
    && echo "Defaults        secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/postgresql-${PGVERSION}/bin\"" >> /etc/sudoers \
    && su - vscode -c "mkdir /home/vscode/pgdata" \
    && su - vscode -c "/usr/local/postgresql-${PGVERSION}/bin/initdb -D /home/vscode/pgdata"
+
+VOLUME /home/vscode/pgdata
