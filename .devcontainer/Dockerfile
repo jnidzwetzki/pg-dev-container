@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/devcontainers/base:bookworm
 ARG PGVERSION
 
 RUN apt update \
-   && apt -y install python3-bpfcc systemtap-sdt-dev flex bison lcov build-essential libxml2-dev libssl-dev zlib1g-dev libreadline-dev llvm llvm-15 llvm-15-dev clang libicu-dev icu-devtools pkgconf vim gdb \
+   && apt -y install python3-bpfcc systemtap-sdt-dev flex bison lcov build-essential libxml2-dev libssl-dev zlib1g-dev libreadline-dev llvm llvm-15 llvm-15-dev clang libicu-dev icu-devtools pkgconf vim gdb linux-perf \
    && mkdir -p /usr/local/src/postgresql \ 
    && wget -q -O /tmp/postgresql.tar.bz2 https://ftp.postgresql.org/pub/source/v${PGVERSION}/postgresql-${PGVERSION}.tar.bz2 \
    && tar jxf /tmp/postgresql.tar.bz2 --strip-components 1 -C /usr/local/src/postgresql \
