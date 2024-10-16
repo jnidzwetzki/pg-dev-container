@@ -141,4 +141,4 @@ After the command is executed, the debugger stops at the breakpoint. On the left
 ![Execute the Debugger](./docs/images/execute_debugger.png)
 
 
-_Note:_ You can also switch to the implementation of the used functions by pressing `F12`. For example, click on the function `text_to_cstring` and press `F12` afterward. The file `variant.c` of the PostgreSQL source code is opened in a new tab, and the cursor is moved to the function definition.
+_Note:_ You can also switch to the implementation of the used functions by pressing `F12`. For example, click on the function `text_to_cstring()` and press `F12` afterward. The file `varlena.c` of the PostgreSQL source code is opened in a new tab, and the cursor is moved to the function definition.
