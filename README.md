@@ -49,7 +49,7 @@ dropdb test
 
 ![Connect to PostgreSQL](./docs/images/connect_psql.png)
 
-### Installing the First Extension
+### Installing an Extension
 
 The container also contains a simple `hello_world` PostgreSQL extension, which provides the function `hello_world(TEXT)`. The function takes a parameter of the type `TEXT` and returns `Hello %PARAMETER` also as a `TEXT`. The source code of the extension can be found in the `src/extension/01_hello_world/` directory.
 
