@@ -130,7 +130,7 @@ To debug the extension, the source code `hello_world.c` needs to be opened. Afte
 
 To stop the execution at this point, open a new connection to the database server by running `psql test` from the terminal.
 
-Afterward, click on the editor and press `F5`. A drop-down menu is shown, which asks you to which process the debugger should connect. Type `test` and you should see two PostgreSQL processes containing the name of the `test` database. One process is the `psql` client, the other process is the actual PostgreSQL server backend. It is named `postgresql: vscode test [local] idle`. `vscode` is the user that is connected to the database, `test` is the database name`, `[local]` is the name of the client host, and `idle` is the transaction status of this backend. This process should be selected from the drop-down list. Afterward the debugger attaches to this process.
+Afterward, click on the editor and press `F5`. A drop-down menu is shown, which asks you to which process the debugger should connect. Type `test` and you should see two PostgreSQL processes containing the name of the `test` database. One process is the `psql` client, the other process is the actual PostgreSQL server backend. It is named `postgresql: vscode test [local] idle`. `vscode` is the user that is connected to the database, `test` is the database name, `[local]` is the name of the client host, and `idle` is the transaction status of this backend. This process should be selected from the drop-down list. Afterward the debugger attaches to this process.
 
 ![Set a breakpoint](./docs/images/attach_debugger.png)
 
