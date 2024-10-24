@@ -1,3 +1,10 @@
+*.d
+
 *.o
-*.so
 *.bc
+
+*.dll
+*.so
+*.dylib
+
+*.out
