@@ -1,0 +1,1 @@
+SELECT code_mistake();

@@ -24,12 +24,12 @@ Datum hello_world(PG_FUNCTION_ARGS)
     greetlen = strlen(greeting) + strlen(username) + 1;
 
     // Request memory
-    result = (char *) palloc(greetlen);
+    result = (char *)palloc(greetlen);
 
     // Build result
     strcpy(result, greeting);
     strcat(result, username);
-    
+
     // Return result and convert it into a PG text datatype
     PG_RETURN_TEXT_P(cstring_to_text(result));
 }

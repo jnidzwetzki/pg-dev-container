@@ -1,0 +1,3 @@
+comment = 'Extension containing a code mistake'
+default_version = '1.0'
+relocatable = true

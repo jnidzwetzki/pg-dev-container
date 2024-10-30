@@ -1,0 +1,12 @@
+diff -U3 /workspaces/pg-dev-container/src/extension/99_code_mistake/test/expected/00_mistake.out /workspaces/pg-dev-container/src/extension/99_code_mistake/results/00_mistake.out
+--- /workspaces/pg-dev-container/src/extension/99_code_mistake/test/expected/00_mistake.out	2024-10-30 09:44:51.578339955 +0000
++++ /workspaces/pg-dev-container/src/extension/99_code_mistake/results/00_mistake.out	2024-10-30 09:45:24.530508681 +0000
+@@ -1,7 +1,2 @@
+ SELECT code_mistake();
+-INFO:  all exptected elements are contaied
+- code_mistake 
+---------------
+- 
+-(1 row)
+-
++ERROR:  value "64" is not part of the bitmap set
