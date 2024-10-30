@@ -1,10 +1,10 @@
-EXTENSION = code_mistake
+EXTENSION = code_bug
 EXTVERSION = 1.0
 
-MODULE_big = code_mistake
-OBJS = code_mistake.o
+MODULE_big = code_bug
+OBJS = code_bug.o
 
-DATA = code_mistake--1.0.sql
+DATA = code_bug--1.0.sql
 
 TESTS = $(wildcard test/sql/*.sql)
 REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
