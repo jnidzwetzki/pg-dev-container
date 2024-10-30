@@ -4,7 +4,7 @@ This directory contains a simple extension that defines the function `code_mista
 
 ### Current result
 
-The `installcheck` is failing.
+The `make installcheck` command is failing.
 
 ```
 $ make
@@ -36,6 +36,10 @@ $ cat regression.diffs
 ```
 
 ### Expected result
+The `make installcheck` command should pass. 
+
+_Note:_ The bug is in the program logic, the test specification is correct.
+
 ```
 $ make installcheck
 [...]
@@ -47,4 +51,4 @@ ok 1         - 00_mistake                                  3 ms
 ```
 
 ### Your task
-Your task is to understand what the `code_mistake` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with the value `64` and all values before work properly.
+Your task is to understand what the `code_mistake` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with the value `64` and all lower values work properly.
