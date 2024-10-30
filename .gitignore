@@ -7,5 +7,4 @@
 *.so
 *.dylib
 
-*.out
 *.diffs

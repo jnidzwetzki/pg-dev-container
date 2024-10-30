@@ -1,0 +1,34 @@
+SELECT code_mistake(NULL);
+ code_mistake 
+--------------
+ 
+(1 row)
+
+SELECT code_mistake(-100);
+ERROR:  max value must be greater than zero
+SELECT code_mistake(0);
+INFO:  all "1" elements are contaied
+ code_mistake 
+--------------
+ 
+(1 row)
+
+SELECT code_mistake(10);
+INFO:  all "11" elements are contaied
+ code_mistake 
+--------------
+ 
+(1 row)
+
+SELECT code_mistake(100);
+INFO:  all "101" elements are contaied
+ code_mistake 
+--------------
+ 
+(1 row)
+
+SELECT code_mistake(99999999999999999);
+ERROR:  function code_mistake(bigint) does not exist
+LINE 1: SELECT code_mistake(99999999999999999);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
