@@ -1,4 +1,4 @@
-# Extension with a Coding Error
+# Extension with a Failing Installcheck
 
 This directory contains a simple extension that defines the function `code_mistake`. Unfortunately, this function contains a bug.
 
