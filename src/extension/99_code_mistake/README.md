@@ -51,4 +51,4 @@ ok 1         - 00_mistake                                  3 ms
 ```
 
 ### Your task
-Your task is to understand what the `code_mistake` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with the value `64` and all lower values work properly.
+Your task is to understand what the `code_mistake` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with larger values and all smaller values work properly.
