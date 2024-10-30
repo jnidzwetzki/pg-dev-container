@@ -12,7 +12,7 @@ Datum hello_world(PG_FUNCTION_ARGS);
 
 Datum hello_world(PG_FUNCTION_ARGS)
 {
-    char *greeting = "Hello ";
+    const char *greeting = "Hello ";
     char *username = NULL;
     char *result = NULL;
     int greetlen;
