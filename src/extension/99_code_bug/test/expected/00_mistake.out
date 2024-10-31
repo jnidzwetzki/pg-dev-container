@@ -1,36 +1,36 @@
 -- KO - Null parameter is not supported
-SELECT code_mistake(NULL);
- code_mistake 
+SELECT check_bms_membership(NULL);
+ check_bms_membership 
 --------------
  
 (1 row)
 
 -- KO - Value out of INT range
-SELECT code_mistake(99999999999999999);
-ERROR:  function code_mistake(bigint) does not exist
-LINE 1: SELECT code_mistake(99999999999999999);
+SELECT check_bms_membership(99999999999999999);
+ERROR:  function check_bms_membership(bigint) does not exist
+LINE 1: SELECT check_bms_membership(99999999999999999);
                ^
 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- KO - Nagative values are not supported
-SELECT code_mistake(-100);
+SELECT check_bms_membership(-100);
 ERROR:  max value must be greater than zero
-SELECT code_mistake(0);
+SELECT check_bms_membership(0);
 INFO:  all "1" elements are contaied
- code_mistake 
+ check_bms_membership 
 --------------
  
 (1 row)
 
-SELECT code_mistake(10);
+SELECT check_bms_membership(10);
 INFO:  all "11" elements are contaied
- code_mistake 
+ check_bms_membership 
 --------------
  
 (1 row)
 
-SELECT code_mistake(100);
+SELECT check_bms_membership(100);
 INFO:  all "101" elements are contaied
- code_mistake 
+ check_bms_membership 
 --------------
  
 (1 row)

@@ -1,6 +1,6 @@
 # Extension with a Bug
 
-This directory contains a simple extension that defines the function `code_mistake`. Unfortunately, this function contains a bug.
+This directory contains a extension that defines the function `check_bms_membership`. Unfortunately, this function contains a bug.
 
 ### Current result
 
@@ -22,9 +22,9 @@ $ cat regression.diffs
 @@ -29,9 +29,4 @@
  (1 row)
 
- SELECT code_mistake(100);
+ SELECT check_bms_membership(100);
 -INFO:  all "101" elements are contaied
-- code_mistake 
+- check_bms_membership 
 ---------------
 - 
 -(1 row)
@@ -48,4 +48,4 @@ ok 1         - 00_mistake                                  3 ms
 ```
 
 ### Your task
-Your task is to understand what the `code_mistake` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with larger values and all smaller values work properly.
+Your task is to understand what the `check_bms_membership` function of the extension is supposed to do, find the bug, and fix it. In addition, you should be able to explain why the problem happens with larger values and all smaller values work properly.

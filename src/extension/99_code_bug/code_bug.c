@@ -5,11 +5,11 @@
 
 PG_MODULE_MAGIC;
 
-PG_FUNCTION_INFO_V1(code_mistake);
+PG_FUNCTION_INFO_V1(check_bms_membership);
 
-Datum code_mistake(PG_FUNCTION_ARGS);
+Datum check_bms_membership(PG_FUNCTION_ARGS);
 
-Datum code_mistake(PG_FUNCTION_ARGS)
+Datum check_bms_membership(PG_FUNCTION_ARGS)
 {
     Bitmapset *set;
     int i;

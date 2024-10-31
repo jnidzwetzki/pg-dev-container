@@ -8,3 +8,5 @@
 *.dylib
 
 *.diffs
+
+regression.out

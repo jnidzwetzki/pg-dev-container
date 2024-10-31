@@ -1,4 +1,4 @@
-comment = 'Extension containing a code mistake'
+comment = 'Extension bms membership demo'
 default_version = '1.0'
 relocatable = true
 module_pathname = '$libdir/code_bug'

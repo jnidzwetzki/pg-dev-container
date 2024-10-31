@@ -1,15 +1,15 @@
 -- KO - Null parameter is not supported
-SELECT code_mistake(NULL);
+SELECT check_bms_membership(NULL);
 
 -- KO - Value out of INT range
-SELECT code_mistake(99999999999999999);
+SELECT check_bms_membership(99999999999999999);
 
 -- KO - Nagative values are not supported
-SELECT code_mistake(-100);
+SELECT check_bms_membership(-100);
 
-SELECT code_mistake(0);
+SELECT check_bms_membership(0);
 
-SELECT code_mistake(10);
+SELECT check_bms_membership(10);
 
-SELECT code_mistake(100);
+SELECT check_bms_membership(100);
 
