@@ -1,7 +1,7 @@
 -- KO - Null parameter is not supported
 SELECT check_bms_membership(NULL);
  check_bms_membership 
---------------
+----------------------
  
 (1 row)
 
@@ -17,21 +17,21 @@ ERROR:  max value must be greater than zero
 SELECT check_bms_membership(0);
 INFO:  all "1" elements are contaied
  check_bms_membership 
---------------
+----------------------
  
 (1 row)
 
 SELECT check_bms_membership(10);
 INFO:  all "11" elements are contaied
  check_bms_membership 
---------------
+----------------------
  
 (1 row)
 
 SELECT check_bms_membership(100);
 INFO:  all "101" elements are contaied
  check_bms_membership 
---------------
+----------------------
  
 (1 row)
 
