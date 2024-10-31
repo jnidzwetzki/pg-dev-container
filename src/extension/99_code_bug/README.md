@@ -42,7 +42,7 @@ $ make installcheck
 [...]
 # +++ regress install-check in  +++
 # using postmaster on Unix socket, default port
-ok 1         - 00_mistake                                  3 ms
+ok 1         - 00_bms_member                                3 ms
 1..1
 # All 1 tests passed.
 ```
