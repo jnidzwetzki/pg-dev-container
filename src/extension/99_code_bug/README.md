@@ -19,9 +19,9 @@ not ok 1     - 00_mistake                                  3 ms
 
 $ cat regression.diffs
 [...]
-@@ -21,12 +21,7 @@
+@@ -29,9 +29,4 @@
  (1 row)
- 
+
  SELECT code_mistake(100);
 -INFO:  all "101" elements are contaied
 - code_mistake 
@@ -30,9 +30,6 @@ $ cat regression.diffs
 -(1 row)
 -
 +ERROR:  value "64" is not part of the bitmap set
- SELECT code_mistake(99999999999999999);
- ERROR:  function code_mistake(bigint) does not exist
- LINE 1: SELECT code_mistake(99999999999999999);
 ```
 
 ### Expected result
