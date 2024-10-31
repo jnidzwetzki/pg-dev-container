@@ -13,7 +13,7 @@ Datum check_bms_membership(PG_FUNCTION_ARGS)
 {
     Bitmapset *set;
     int i;
-    int max_value;
+    int32 max_value;
 
     max_value = PG_GETARG_INT32(0);
 
