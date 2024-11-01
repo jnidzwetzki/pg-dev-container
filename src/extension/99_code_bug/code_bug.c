@@ -39,7 +39,7 @@ Datum check_bms_membership(PG_FUNCTION_ARGS)
     }
 
     ereport(INFO,
-            (errmsg("all \"%d\" elements are contaied", bms_num_members(set))));
+            (errmsg("all \"%d\" elements are contained", bms_num_members(set))));
 
     bms_free(set);
 

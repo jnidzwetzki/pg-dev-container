@@ -15,21 +15,21 @@ HINT:  No function matches the given name and argument types. You might need to 
 SELECT check_bms_membership(-100);
 ERROR:  max value must be greater than zero
 SELECT check_bms_membership(0);
-INFO:  all "1" elements are contaied
+INFO:  all "1" elements are contained
  check_bms_membership 
 ----------------------
  
 (1 row)
 
 SELECT check_bms_membership(10);
-INFO:  all "11" elements are contaied
+INFO:  all "11" elements are contained
  check_bms_membership 
 ----------------------
  
 (1 row)
 
 SELECT check_bms_membership(100);
-INFO:  all "101" elements are contaied
+INFO:  all "101" elements are contained
  check_bms_membership 
 ----------------------
  

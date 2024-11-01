@@ -23,9 +23,9 @@ $ cat regression.diffs
  (1 row)
 
  SELECT check_bms_membership(100);
--INFO:  all "101" elements are contaied
+-INFO:  all "101" elements are contained
 - check_bms_membership 
----------------
+-----------------------
 - 
 -(1 row)
 -
