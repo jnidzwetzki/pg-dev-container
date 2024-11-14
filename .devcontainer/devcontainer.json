@@ -19,6 +19,6 @@
         }
      },
     "remoteUser": "vscode",
-    "postStartCommand": "pg_ctl start -D /home/vscode/pgdata",
+    "postStartCommand": "pg_ctl start -D /home/vscode/pgdata -l /home/vscode/postgresql.log",
     "forwardPorts": [5432]
 }
