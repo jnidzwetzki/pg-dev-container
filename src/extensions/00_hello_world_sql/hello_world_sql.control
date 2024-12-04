@@ -1,0 +1,2 @@
+comment = 'Simple hello world extension - SQL version'
+default_version = '1.0'
