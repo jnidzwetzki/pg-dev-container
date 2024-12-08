@@ -1,5 +1,4 @@
 #include "postgres.h"
-#include "varatt.h"
 #include "fmgr.h"
 
 #include "utils/builtins.h"
@@ -7,8 +6,6 @@
 PG_MODULE_MAGIC;
 
 PG_FUNCTION_INFO_V1(hello_world);
-
-Datum hello_world(PG_FUNCTION_ARGS);
 
 Datum hello_world(PG_FUNCTION_ARGS)
 {
