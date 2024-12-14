@@ -5,14 +5,15 @@
 
 PG_MODULE_MAGIC;
 
-PG_FUNCTION_INFO_V1(check_bms_membership);
+PG_FUNCTION_INFO_V1(count_via_bms);
 
-Datum check_bms_membership(PG_FUNCTION_ARGS);
+Datum count_via_bms(PG_FUNCTION_ARGS);
 
-Datum check_bms_membership(PG_FUNCTION_ARGS)
+Datum count_via_bms(PG_FUNCTION_ARGS)
 {
     Bitmapset *set;
     int i;
+    int result;
     int32 max_value;
 
     max_value = PG_GETARG_INT32(0);
@@ -29,19 +30,16 @@ Datum check_bms_membership(PG_FUNCTION_ARGS)
     for (i = 1; i <= max_value; i++)
     {
         bms_add_member(set, i);
-
-        if (!bms_is_member(i, set))
-        {
-            ereport(ERROR,
-                    (errcode(ERRCODE_DATA_CORRUPTED),
-                     errmsg("value \"%d\" is not part of the bitmap set", i)));
-        }
+        Assert(bms_is_member(i, set));
     }
 
-    ereport(INFO,
-            (errmsg("all \"%d\" elements are contained", bms_num_members(set))));
+    ereport(DEBUG2,
+            (errcode(ERRCODE_SUCCESSFUL_COMPLETION),
+             errmsg("count_via_bms performed \"%d\" iterations", i)));
+
+    result = bms_num_members(set);
 
     bms_free(set);
 
-    PG_RETURN_VOID();
+    PG_RETURN_INT32((int32)result - 1);
 }

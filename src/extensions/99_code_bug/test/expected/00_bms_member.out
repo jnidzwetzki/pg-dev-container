@@ -1,37 +1,44 @@
 -- KO - Null parameter is not supported
-SELECT check_bms_membership(NULL);
- check_bms_membership 
-----------------------
- 
+SELECT count_via_bms(NULL);
+ count_via_bms 
+---------------
+              
 (1 row)
 
 -- KO - Value out of INT range
-SELECT check_bms_membership(99999999999999999);
-ERROR:  function check_bms_membership(bigint) does not exist
-LINE 1: SELECT check_bms_membership(99999999999999999);
+SELECT count_via_bms(99999999999999999);
+ERROR:  function count_via_bms(bigint) does not exist
+LINE 1: SELECT count_via_bms(99999999999999999);
                ^
 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
--- KO - Nagative values are not supported
-SELECT check_bms_membership(-100);
+-- KO - Negative values are not supported
+SELECT count_via_bms(-100);
 ERROR:  max value must be greater than zero
-SELECT check_bms_membership(0);
-INFO:  all "1" elements are contained
- check_bms_membership 
-----------------------
- 
+SELECT count_via_bms(0);
+ count_via_bms 
+---------------
+             0
 (1 row)
 
-SELECT check_bms_membership(10);
-INFO:  all "11" elements are contained
- check_bms_membership 
-----------------------
- 
+SELECT count_via_bms(10);
+ count_via_bms 
+---------------
+            10
 (1 row)
 
-SELECT check_bms_membership(100);
-INFO:  all "101" elements are contained
- check_bms_membership 
-----------------------
- 
+SELECT count_via_bms(100);
+ count_via_bms 
+---------------
+           100
 (1 row)
 
+-- Test debug statements
+SET client_min_messages = DEBUG2;
+SELECT count_via_bms(100);
+DEBUG:  count_via_bms performed "101" iterations
+ count_via_bms 
+---------------
+           100
+(1 row)
+
+RESET client_min_messages;
