@@ -56,7 +56,7 @@ The container also contains a simple `hello_world` PostgreSQL extension, which p
 To install and test the extension, you need to change in the directory of the extension. Afterward, you can compile it by running `make`. This builds the library `hello_world.so`. By running `sudo make install`, the library is copied into the `lib` folder of the database server, and helper files are copied into the `extensions` directory of PostgreSQL. The command must be prefixed with `sudo` since only root has write permissions on these directories. After the extension is installed it can be tested. By running `make installcheck` a new database is created and, the test statements of the file `test/sql/00_hello.sql` are executed and the results are compared with the output stored in `test/expected/00_hello.out`.
 
 ```
-cd src/extension/01_hello_world/
+cd src/extensions/01_hello_world/
 make
 sudo make install
 make installcheck
