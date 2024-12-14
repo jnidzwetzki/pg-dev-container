@@ -8,6 +8,7 @@ To use the development container, the following prerequisites have to be met:
 
 * VSCode is [installed](https://code.visualstudio.com/Download)
 * Docker is [installed](https://code.visualstudio.com/docs/devcontainers/tutorial#_install-docker)
+* The VSCode _Dev Containers_ extension is [installed](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 ## Open the Project
 
