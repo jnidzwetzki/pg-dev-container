@@ -18,7 +18,10 @@ RUN apt update \
    && echo "export PATH=\$PATH:/usr/local/postgresql-${PGVERSION}/bin" >> /root/.bashrc \
    && echo "export PATH=\$PATH:/usr/local/postgresql-${PGVERSION}/bin" >> /home/vscode/.bashrc \
    && echo "Defaults        secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/postgresql-${PGVERSION}/bin\"" >> /etc/sudoers \
+   && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+   && sed -i 's/^# *\(de_DE.UTF-8\)/\1/' /etc/locale.gen \ 
+   && locale-gen \
    && su - vscode -c "mkdir /home/vscode/pgdata" \
-   && su - vscode -c "/usr/local/postgresql-${PGVERSION}/bin/initdb -D /home/vscode/pgdata"
+   && su - vscode -c "/usr/local/postgresql-${PGVERSION}/bin/initdb -D /home/vscode/pgdata -E UTF-8"
 
 VOLUME /home/vscode/pgdata
