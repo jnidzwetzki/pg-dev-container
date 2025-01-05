@@ -12,9 +12,15 @@ RUN apt update \
    && make -j $(nproc) -C src/test/isolation \
    && make -j $(nproc) -C contrib/postgres_fdw \
    && make -j $(nproc) -C contrib/pageinspect \
+   && make -j $(nproc) -C contrib/pg_freespacemap \
+   && make -j $(nproc) -C contrib/pg_visibility \
+   && make -j $(nproc) -C contrib/pg_buffercache \
    && make install \
    && make -C contrib/postgres_fdw install \
    && make -C contrib/pageinspect install \
+   && make -C contrib/pg_freespacemap install \
+   && make -C contrib/pg_visibility install \
+   && make -C contrib/pg_buffercache install \
    && echo "export PATH=\$PATH:/usr/local/postgresql-${PGVERSION}/bin" >> /root/.bashrc \
    && echo "export PATH=\$PATH:/usr/local/postgresql-${PGVERSION}/bin" >> /home/vscode/.bashrc \
    && echo "Defaults        secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/postgresql-${PGVERSION}/bin\"" >> /etc/sudoers \
