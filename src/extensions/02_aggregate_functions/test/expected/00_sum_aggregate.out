@@ -1,0 +1,47 @@
+-- Direct function call
+SELECT mysum(1234);
+ mysum 
+-------
+  1234
+(1 row)
+
+SELECT mysum(0);
+ mysum 
+-------
+     0
+(1 row)
+
+SELECT mysum(-123);
+ mysum 
+-------
+  -123
+(1 row)
+
+SELECT mysum(NULL);
+ mysum 
+-------
+      
+(1 row)
+
+-- Test using generate series
+SELECT mysum(i) FROM generate_series(1, 10) i;
+ mysum 
+-------
+    55
+(1 row)
+
+SELECT mysum(i) FROM generate_series(1, 100) i;
+ mysum 
+-------
+  5050
+(1 row)
+
+-- Test using a table
+CREATE TABLE test_table AS SELECT i FROM generate_series(1, 100) i;
+SELECT mysum(i) FROM test_table;
+ mysum 
+-------
+  5050
+(1 row)
+
+DROP TABLE test_table;
