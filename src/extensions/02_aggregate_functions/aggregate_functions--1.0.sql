@@ -19,12 +19,31 @@ LANGUAGE C IMMUTABLE;
 CREATE OR REPLACE FUNCTION _int32_abs_avg_final_fn(state internal)
 RETURNS FLOAT
 AS 'MODULE_PATHNAME', 'int32_abs_avg_final'
+LANGUAGE C IMMUTABLE STRICT;
+
+CREATE OR REPLACE FUNCTION _int32_abs_combine_fn(state1 internal, state2 internal)
+RETURNS internal
+AS 'MODULE_PATHNAME', 'int32_abs_combine'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION _int32_abs_avg_serial_fn(state internal)
+RETURNS BYTEA
+AS 'MODULE_PATHNAME', 'int32_abs_avg_serialize'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION _int32_abs_avg_deserial_fn(sstate bytea, dummy internal)
+RETURNS internal
+AS 'MODULE_PATHNAME', 'int32_abs_avg_deserialize'
 LANGUAGE C IMMUTABLE;
 
 CREATE OR REPLACE AGGREGATE abs_avg(INT)
 (
     sfunc = _int32_abs_avg_trans_fn,
     stype = internal,
-    finalfunc = _int32_abs_avg_final_fn
+    finalfunc = _int32_abs_avg_final_fn,
+    parallel = safe,
+    combinefunc = _int32_abs_combine_fn,
+    serialfunc = _int32_abs_avg_serial_fn,
+    deserialfunc = _int32_abs_avg_deserial_fn
 );
 

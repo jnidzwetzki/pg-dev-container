@@ -1,0 +1,59 @@
+-- Direct function call
+SELECT abs_avg(1234);
+ abs_avg 
+---------
+    1234
+(1 row)
+
+SELECT abs_avg(0);
+ abs_avg 
+---------
+       0
+(1 row)
+
+SELECT abs_avg(-123);
+ abs_avg 
+---------
+     123
+(1 row)
+
+SELECT abs_avg(NULL);
+ abs_avg 
+---------
+        
+(1 row)
+
+-- Test using generate series
+SELECT abs_avg(i) FROM generate_series(1, 10) i;
+ abs_avg 
+---------
+     5.5
+(1 row)
+
+SELECT abs_avg(i) FROM generate_series(1, 100) i;
+ abs_avg 
+---------
+    50.5
+(1 row)
+
+SELECT abs_avg(i) FROM generate_series(-10, 100) i;
+      abs_avg       
+--------------------
+ 45.990990990990994
+(1 row)
+
+SELECT abs_avg(i) FROM generate_series(-100, 100) i;
+      abs_avg      
+-------------------
+ 50.24875621890547
+(1 row)
+
+-- Test using a table
+CREATE TABLE test_table AS SELECT i FROM generate_series(1, 100) i;
+SELECT abs_avg(i) FROM test_table;
+ abs_avg 
+---------
+    50.5
+(1 row)
+
+DROP TABLE test_table;

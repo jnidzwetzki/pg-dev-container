@@ -1,5 +1,6 @@
 #include "postgres.h"
 #include "fmgr.h"
+#include "varatt.h"
 
 PG_MODULE_MAGIC;
 
@@ -95,12 +96,21 @@ Datum int32_abs_avg_trans(PG_FUNCTION_ARGS)
     PG_RETURN_POINTER(state);
 }
 
+/* 
+ * Optional parallel implementation
+ */
+PG_FUNCTION_INFO_V1(int32_abs_combine);
+PG_FUNCTION_INFO_V1(int32_abs_avg_serialize);
+PG_FUNCTION_INFO_V1(int32_abs_avg_deserialize);
+
 /*
  * abs_avg aggregate final function. 
  */
 Datum int32_abs_avg_final(PG_FUNCTION_ARGS)
 {
     int32_abs_avg_state *state;
+
+    Assert(PG_ARGISNULL(0) == false);
 
     state = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
 
@@ -110,3 +120,55 @@ Datum int32_abs_avg_final(PG_FUNCTION_ARGS)
     PG_RETURN_FLOAT8((double)state->sum / state->count);
 }
 
+/*
+ * abs_avg aggregate state combine function.
+ */
+Datum int32_abs_combine(PG_FUNCTION_ARGS)
+{
+    int32_abs_avg_state *state1;
+    int32_abs_avg_state *state2;
+
+    /* If either state is NULL, the result is the other state */
+    if (PG_ARGISNULL(0))
+        PG_RETURN_POINTER(PG_GETARG_POINTER(1));
+    if (PG_ARGISNULL(1))
+        PG_RETURN_POINTER(PG_GETARG_POINTER(0));
+
+    /* Combine the two states */
+    state1 = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
+    state2 = (int32_abs_avg_state *)PG_GETARG_POINTER(1);
+
+    state1->sum += state2->sum;
+    state1->count += state2->count;
+
+    PG_RETURN_POINTER(state1);
+}
+
+/*
+ * abs_avg aggregate state serialization function.
+ */
+Datum int32_abs_avg_serialize(PG_FUNCTION_ARGS)
+{
+    int32_abs_avg_state *state = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
+    bytea *result;
+
+    result = (bytea *)palloc0(sizeof(int32_abs_avg_state) + VARHDRSZ);
+    memcpy(VARDATA(result), state, sizeof(int32_abs_avg_state));
+    SET_VARSIZE(result, sizeof(int32_abs_avg_state));
+
+    PG_RETURN_BYTEA_P(result);
+}
+
+/*
+ * abs_avg aggregate state deserialization function.
+ */
+Datum int32_abs_avg_deserialize(PG_FUNCTION_ARGS)
+{
+    bytea *bytes = PG_GETARG_BYTEA_P(0);
+    int32_abs_avg_state *state;
+
+    state = (int32_abs_avg_state *)palloc0(sizeof(int32_abs_avg_state));
+    memcpy(state, VARDATA(bytes), sizeof(int32_abs_avg_state));
+
+    PG_RETURN_POINTER(state);
+}
