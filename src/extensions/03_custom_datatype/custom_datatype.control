@@ -1,0 +1,4 @@
+comment = 'Custom datatype example'
+default_version = '1.0'
+relocatable = true
+module_pathname = '$libdir/custom_datatype'

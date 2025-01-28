@@ -1,0 +1,31 @@
+CREATE TYPE point2d;
+
+CREATE FUNCTION point2d_in(cstring) RETURNS point2d
+  AS 'MODULE_PATHNAME'
+  LANGUAGE C STRICT IMMUTABLE;
+
+CREATE FUNCTION point2d_out(point2d) RETURNS cstring
+  AS 'MODULE_PATHNAME'
+  LANGUAGE C STRICT IMMUTABLE;
+
+CREATE FUNCTION point2d_recv(internal) RETURNS point2d
+  AS 'MODULE_PATHNAME'
+  LANGUAGE C STRICT IMMUTABLE;
+
+CREATE FUNCTION point2d_send(point2d) RETURNS bytea
+  AS 'MODULE_PATHNAME'
+  LANGUAGE C STRICT IMMUTABLE;
+
+CREATE TYPE point2d (
+    INPUT = point2d_in,
+    OUTPUT = point2d_out,
+    RECEIVE = point2d_recv,
+    SEND = point2d_send,
+    INTERNALLENGTH = 16,  -- 2 doubles, 8 bytes each
+    ALIGNMENT = double
+);
+
+
+CREATE FUNCTION point2d_distance(point2d, point2d) RETURNS DOUBLE PRECISION
+  AS 'MODULE_PATHNAME'
+  LANGUAGE C STRICT IMMUTABLE PARALLEL SAFE;
