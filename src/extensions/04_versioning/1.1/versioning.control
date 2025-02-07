@@ -1,0 +1,4 @@
+comment = 'Versioning example'
+default_version = '1.1'
+relocatable = true
+module_pathname = '$libdir/versioning'
