@@ -1,0 +1,4 @@
+comment = 'Set returning example'
+default_version = '1.0'
+relocatable = true
+module_pathname = '$libdir/set_returning'
