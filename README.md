@@ -75,11 +75,11 @@ Afterward, the extension should be available for installation. This can be verif
 ```sql
 SELECT * FROM pg_available_extensions;
 
-name | default_version | installed_version |                      comment                       
+         name | default_version | installed_version |                      comment                       
 --------------+-----------------+-------------------+----------------------------------------------------
- postgres_fdw | 1.1 |                   | foreign-data wrapper for remote PostgreSQL servers
- plpgsql      | 1.0 | 1.0 | PL/pgSQL procedural language
- hello_world  | 1.0 |                   | Simple hello world extension
+ postgres_fdw |             1.1 |                   | foreign-data wrapper for remote PostgreSQL servers
+ plpgsql      |             1.0 |               1.0 | PL/pgSQL procedural language
+ hello_world  |             1.0 |                   | Simple hello world extension
 (3 rows)
 ```
 
@@ -96,7 +96,7 @@ the extension can be installed in the current database. By executing `\dx` (a he
 ```
 \dx
  List of installed extensions
- Name     | Version |   Schema   |         Description          
+   Name      | Version |   Schema   |         Description          
 -------------+---------+------------+------------------------------
  hello_world | 1.0     | public     | Simple hello world extension
  plpgsql     | 1.0     | pg_catalog | PL/pgSQL procedural language
