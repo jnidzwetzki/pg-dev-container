@@ -14,7 +14,8 @@
             "streetsidesoftware.code-spell-checker",
             "ms-vscode.cpptools-extension-pack",
             "ms-vscode.makefile-tools",
-            "yzhang.markdown-all-in-one"
+            "yzhang.markdown-all-in-one",
+            "ash-blade.postgresql-hacker-helper"
          ]
         }
      },
