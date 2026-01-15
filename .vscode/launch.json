@@ -8,7 +8,7 @@
             "name": "(gdb) Attach PostgreSQL",
             "type": "cppdbg",
             "request": "attach",
-            "program": "/usr/local/postgresql-17.2/bin/postgres",
+            "program": "/usr/local/postgresql-18.1/bin/postgres",
             "processId": "${command:pickProcess}",
             "args": [],
             "stopAtEntry": false,
