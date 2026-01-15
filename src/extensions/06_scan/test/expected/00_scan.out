@@ -1,0 +1,80 @@
+CREATE TABLE scantable (
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
+INSERT INTO scantable (name) VALUES ('Alice');
+INSERT INTO scantable (name) VALUES ('Bob');
+INSERT INTO scantable (name) VALUES (NULL);
+SELECT full_table_scan('scantable');
+INFO:  Attribute name 1: id
+INFO:  Attribute name 2: name
+INFO:  ==========================
+INFO:  Attribute 1: 1
+INFO:  Attribute 2: Alice
+INFO:  ==========================
+INFO:  Attribute 1: 2
+INFO:  Attribute 2: Bob
+INFO:  ==========================
+INFO:  Attribute 1: 3
+INFO:  Attribute 2: null
+INFO:  ==========================
+ full_table_scan 
+-----------------
+ 
+(1 row)
+
+SELECT table_scan_with_scankeys('scantable');
+INFO:  Attribute name 1: id
+INFO:  Attribute name 2: name
+INFO:  ==========================
+INFO:  Attribute 1: 2
+INFO:  Attribute 2: Bob
+INFO:  ==========================
+ table_scan_with_scankeys 
+--------------------------
+ 
+(1 row)
+
+CREATE INDEX scantable_id_name_idx ON scantable(id, name);
+SELECT table_scan_with_index('scantable', 'scantable_id_name_idx');
+INFO:  Attribute name 1: id
+INFO:  Attribute name 2: name
+INFO:  ==========================
+INFO:  Attribute 1: 2
+INFO:  Attribute 2: Bob
+INFO:  ==========================
+ table_scan_with_index 
+-----------------------
+ 
+(1 row)
+
+SELECT table_scan_and_sort_attribute('scantable', 'id');
+INFO:  Attribute 1: 3
+INFO:  Attribute 2: null
+INFO:  ==========================
+INFO:  Attribute 1: 2
+INFO:  Attribute 2: Bob
+INFO:  ==========================
+INFO:  Attribute 1: 1
+INFO:  Attribute 2: Alice
+INFO:  ==========================
+ table_scan_and_sort_attribute 
+-------------------------------
+ 
+(1 row)
+
+SELECT table_scan_and_sort_attribute('scantable', 'name');
+INFO:  Attribute 1: 2
+INFO:  Attribute 2: Bob
+INFO:  ==========================
+INFO:  Attribute 1: 1
+INFO:  Attribute 2: Alice
+INFO:  ==========================
+INFO:  Attribute 1: 3
+INFO:  Attribute 2: null
+INFO:  ==========================
+ table_scan_and_sort_attribute 
+-------------------------------
+ 
+(1 row)
+
