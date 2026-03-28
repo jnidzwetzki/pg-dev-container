@@ -2,7 +2,7 @@
    "name": "PostgreSQL dev container",
    "build": {
         "dockerfile": "Dockerfile",
-        "args": { "PGVERSION": "18.1" }
+        "args": { "PGVERSION": "18.3" }
     },
     "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
     "customizations": {
