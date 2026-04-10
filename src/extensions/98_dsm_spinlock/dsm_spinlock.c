@@ -129,10 +129,10 @@ Datum grab_spinlock(PG_FUNCTION_ARGS)
 
     /* Make sure we are connected to the shared memory region */
     attach_shm();
+    Assert(sl_wait_state != NULL);
 
     /* Measure the start time */
     start_time = GetCurrentTimestamp();
-    Assert(sl_wait_state != NULL);
 
     /* Grab the spinlock... */
     SpinLockAcquire(&sl_wait_state->spinlock);
