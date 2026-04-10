@@ -13,7 +13,7 @@ LINE 1: SELECT count_via_bms(99999999999999999);
 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- KO - Negative values are not supported
 SELECT count_via_bms(-100);
-ERROR:  max value must be greater than zero
+ERROR:  max value must be greater or equal than zero
 SELECT count_via_bms(0);
  count_via_bms 
 ---------------

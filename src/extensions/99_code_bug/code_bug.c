@@ -22,7 +22,7 @@ Datum count_via_bms(PG_FUNCTION_ARGS)
     {
         ereport(ERROR,
                 (errcode(ERRCODE_DATA_EXCEPTION),
-                 errmsg("max value must be greater than zero")));
+                 errmsg("max value must be greater or equal than zero")));
     }
 
     set = bms_make_singleton(0);
