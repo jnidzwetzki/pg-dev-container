@@ -25,3 +25,13 @@ db1=# select * from grab_spinlock(10000);
 
 Time: 15337.814 ms (00:15.338)
 ```
+
+## pg_stat_activity
+```sql
+db1=# select pid, query_start, query, wait_event from pg_stat_activity where datname = 'template1' and pid != pg_backend_pid() order by query_start;
+  pid  |          query_start          |                query                | wait_event 
+-------+-------------------------------+-------------------------------------+------------
+ 18767 | 2026-04-10 20:38:27.466107+00 | select * from grab_spinlock(12000); | 
+ 21231 | 2026-04-10 20:38:29.156627+00 | select * from grab_spinlock(12000); | SpinDelay
+(2 rows)
+```
