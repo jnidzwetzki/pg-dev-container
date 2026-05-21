@@ -10,6 +10,14 @@ SELECT '(1,1'::point2d;
 SELECT '1,1)'::point2d;
 SELECT '(1,1,1)'::point2d;
 
+-- Whitespace handling
+SELECT ' (1,1)'::point2d;
+SELECT '( 1,1)'::point2d;
+SELECT '(1, 1)'::point2d;
+SELECT '(1, 1)'::point2d;
+SELECT '(1,1 )'::point2d;
+SELECT '(1,1) '::point2d;
+
 -- Distance calculation
 SELECT point2d_distance('(1,1)'::point2d, '(1,1)'::point2d);
 SELECT point2d_distance('(1,1)'::point2d, '(0,0)'::point2d);

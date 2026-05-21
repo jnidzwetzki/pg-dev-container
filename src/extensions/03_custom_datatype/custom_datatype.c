@@ -31,7 +31,7 @@ Datum point2d_in(PG_FUNCTION_ARGS)
     int n;
     int chars_read = 0;
 
-    n = sscanf(str, " ( %lf , %lf )%n", &x, &y, &chars_read);
+    n = sscanf(str, " ( %lf , %lf ) %n", &x, &y, &chars_read);
 
     if (n != 2 || str[chars_read] != '\0')
         ereport(ERROR, (errcode(ERRCODE_INVALID_TEXT_REPRESENTATION), 

@@ -40,6 +40,43 @@ SELECT '(1,1,1)'::point2d;
 ERROR:  invalid input syntax for type Point: "(1,1,1)"
 LINE 1: SELECT '(1,1,1)'::point2d;
                ^
+-- Whitespace handling
+SELECT ' (1,1)'::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
+SELECT '( 1,1)'::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
+SELECT '(1, 1)'::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
+SELECT '(1, 1)'::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
+SELECT '(1,1 )'::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
+SELECT '(1,1) '::point2d;
+ point2d 
+---------
+ (1,1)
+(1 row)
+
 -- Distance calculation
 SELECT point2d_distance('(1,1)'::point2d, '(1,1)'::point2d);
  point2d_distance 
