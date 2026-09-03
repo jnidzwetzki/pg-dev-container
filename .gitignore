@@ -10,3 +10,4 @@
 *.diffs
 
 regression.out
+results/

@@ -85,7 +85,12 @@ Datum int32_abs_avg_trans(PG_FUNCTION_ARGS)
     /* If the argument is not NULL, update the state */
     if (! PG_ARGISNULL(1))
     {
-        state->sum += abs(PG_GETARG_INT32(1));
+        int64 value = PG_GETARG_INT32(1);
+
+        /*
+         * Calling abs() on INT32_MIN is undefined behaviour.
+         */
+        state->sum += (value < 0) ? -value : value;
         state->count++;
     }
 
@@ -110,6 +115,7 @@ Datum int32_abs_avg_final(PG_FUNCTION_ARGS)
 {
     int32_abs_avg_state *state;
 
+    /* The SQL function is declared STRICT, so the state can not be NULL */
     Assert(PG_ARGISNULL(0) == false);
 
     state = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
@@ -125,12 +131,37 @@ Datum int32_abs_avg_final(PG_FUNCTION_ARGS)
  */
 Datum int32_abs_combine(PG_FUNCTION_ARGS)
 {
+    MemoryContext agg_context;
+    MemoryContext old_context;
     int32_abs_avg_state *state1;
     int32_abs_avg_state *state2;
 
-    /* If either state is NULL, the result is the other state */
+    if (! AggCheckCallContext(fcinfo, &agg_context))
+        elog(ERROR, "aggregate function called in non-aggregate context");
+
+    /* Nothing to combine */
+    if (PG_ARGISNULL(0) && PG_ARGISNULL(1))
+        PG_RETURN_NULL();
+
+    /*
+     * This function is not declared STRICT, so PostgreSQL can it with a
+     * NULL first argument and we need to copy the second argument into
+     * it.
+     */
     if (PG_ARGISNULL(0))
-        PG_RETURN_POINTER(PG_GETARG_POINTER(1));
+    {
+        state2 = (int32_abs_avg_state *)PG_GETARG_POINTER(1);
+
+        old_context = MemoryContextSwitchTo(agg_context);
+        state1 = palloc(sizeof(int32_abs_avg_state));
+        MemoryContextSwitchTo(old_context);
+
+        memcpy(state1, state2, sizeof(int32_abs_avg_state));
+
+        PG_RETURN_POINTER(state1);
+    }
+
+    /* The first state already lives in the aggregate context, reuse it */
     if (PG_ARGISNULL(1))
         PG_RETURN_POINTER(PG_GETARG_POINTER(0));
 
@@ -149,12 +180,18 @@ Datum int32_abs_combine(PG_FUNCTION_ARGS)
  */
 Datum int32_abs_avg_serialize(PG_FUNCTION_ARGS)
 {
-    int32_abs_avg_state *state = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
+    int32_abs_avg_state *state;
     bytea *result;
+
+    /* Check that we are called as an aggregate */
+    if (! AggCheckCallContext(fcinfo, NULL))
+        elog(ERROR, "aggregate function called in non-aggregate context");
+
+    state = (int32_abs_avg_state *)PG_GETARG_POINTER(0);
 
     result = (bytea *)palloc0(sizeof(int32_abs_avg_state) + VARHDRSZ);
     memcpy(VARDATA(result), state, sizeof(int32_abs_avg_state));
-    SET_VARSIZE(result, sizeof(int32_abs_avg_state));
+    SET_VARSIZE(result, sizeof(int32_abs_avg_state) + VARHDRSZ);
 
     PG_RETURN_BYTEA_P(result);
 }
@@ -164,10 +201,22 @@ Datum int32_abs_avg_serialize(PG_FUNCTION_ARGS)
  */
 Datum int32_abs_avg_deserialize(PG_FUNCTION_ARGS)
 {
-    bytea *bytes = PG_GETARG_BYTEA_P(0);
+    MemoryContext agg_context;
+    MemoryContext old_context;
+    bytea *bytes;
     int32_abs_avg_state *state;
 
+    /* Check that we are called as an aggregate and populate agg_context */
+    if (! AggCheckCallContext(fcinfo, &agg_context))
+        elog(ERROR, "aggregate function called in non-aggregate context");
+
+    bytes = PG_GETARG_BYTEA_P(0);
+
+    /* The state becomes the transition value and has to survive the call */
+    old_context = MemoryContextSwitchTo(agg_context);
     state = (int32_abs_avg_state *)palloc0(sizeof(int32_abs_avg_state));
+    MemoryContextSwitchTo(old_context);
+
     memcpy(state, VARDATA(bytes), sizeof(int32_abs_avg_state));
 
     PG_RETURN_POINTER(state);

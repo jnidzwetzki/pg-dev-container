@@ -29,12 +29,12 @@ LANGUAGE C IMMUTABLE;
 CREATE OR REPLACE FUNCTION _int32_abs_avg_serial_fn(state internal)
 RETURNS BYTEA
 AS 'MODULE_PATHNAME', 'int32_abs_avg_serialize'
-LANGUAGE C IMMUTABLE;
+LANGUAGE C IMMUTABLE STRICT;
 
 CREATE OR REPLACE FUNCTION _int32_abs_avg_deserial_fn(sstate bytea, dummy internal)
 RETURNS internal
 AS 'MODULE_PATHNAME', 'int32_abs_avg_deserialize'
-LANGUAGE C IMMUTABLE;
+LANGUAGE C IMMUTABLE STRICT;
 
 CREATE OR REPLACE AGGREGATE abs_avg(INT)
 (
