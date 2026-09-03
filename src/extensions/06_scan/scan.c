@@ -128,7 +128,7 @@ Datum table_scan_with_scankeys(PG_FUNCTION_ARGS)
 
     if (TupleDescAttr(tupdesc, 0)->atttypid != INT4OID)
         ereport(ERROR, (errmsg("first attribute is not of type int4")));
-    ScanKeyInit(&scanKeys[0], 1, InvalidStrategy, F_INT4GE, Int64GetDatum(2));
+    ScanKeyInit(&scanKeys[0], 1, InvalidStrategy, F_INT4GE, Int32GetDatum(2));
 
     if (TupleDescAttr(tupdesc, 1)->atttypid != TEXTOID)
         ereport(ERROR, (errmsg("second attribute is not of type text")));

@@ -143,11 +143,7 @@ Datum int32_abs_combine(PG_FUNCTION_ARGS)
     if (PG_ARGISNULL(0) && PG_ARGISNULL(1))
         PG_RETURN_NULL();
 
-    /*
-     * This function is not declared STRICT, so PostgreSQL can it with a
-     * NULL first argument and we need to copy the second argument into
-     * it.
-     */
+    /* First state: copy it into the aggregate memory context */
     if (PG_ARGISNULL(0))
     {
         state2 = (int32_abs_avg_state *)PG_GETARG_POINTER(1);
