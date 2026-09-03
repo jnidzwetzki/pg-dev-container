@@ -88,7 +88,7 @@ Datum int32_abs_avg_trans(PG_FUNCTION_ARGS)
         int64 value = PG_GETARG_INT32(1);
 
         /*
-         * Calling abs() on INT32_MIN is undefined behaviour.
+         * Calling abs() on INT32_MIN is undefined behavior.
          */
         state->sum += (value < 0) ? -value : value;
         state->count++;

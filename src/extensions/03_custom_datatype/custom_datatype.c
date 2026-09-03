@@ -35,7 +35,7 @@ Datum point2d_in(PG_FUNCTION_ARGS)
 
     if (n != 2 || str[chars_read] != '\0')
         ereport(ERROR, (errcode(ERRCODE_INVALID_TEXT_REPRESENTATION), 
-           errmsg("invalid input syntax for type Point: \"%s\"", str)));
+           errmsg("invalid input syntax for type point2d: \"%s\"", str)));
 
     /* Allocate memory for the Point. */
     result = (Point2D *)palloc(sizeof(Point2D));

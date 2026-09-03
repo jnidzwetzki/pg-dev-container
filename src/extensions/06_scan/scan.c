@@ -202,7 +202,7 @@ Datum table_scan_with_index(PG_FUNCTION_ARGS)
 
     if (TupleDescAttr(indexrelation->rd_att, 0)->atttypid != INT4OID)
         ereport(ERROR, (errmsg("first attribute is not of type int4")));
-    ScanKeyInit(&scanKeys[0], 1, BTGreaterEqualStrategyNumber, F_INT4GE, Int64GetDatum(2));
+    ScanKeyInit(&scanKeys[0], 1, BTGreaterEqualStrategyNumber, F_INT4GE, Int32GetDatum(2));
 
     if (TupleDescAttr(indexrelation->rd_att, 1)->atttypid != TEXTOID)
         ereport(ERROR, (errmsg("second attribute is not of type text")));
@@ -246,8 +246,7 @@ PG_FUNCTION_INFO_V1(table_scan_and_sort_attribute);
 Datum table_scan_and_sort_attribute(PG_FUNCTION_ARGS)
 {
     Oid relid = PG_ARGISNULL(0) ? InvalidOid : PG_GETARG_OID(0);
-    text *sort_attr = PG_ARGISNULL(1) ? NULL : PG_GETARG_TEXT_P(1);
-    char *sort_attr_str = text_to_cstring(sort_attr);
+    char *sort_attr_str = text_to_cstring(PG_GETARG_TEXT_PP(1));
     TypeCacheEntry *sort_func;
     Relation relation;
     TableScanDesc tablescandesc;
