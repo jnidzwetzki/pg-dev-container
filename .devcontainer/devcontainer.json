@@ -21,5 +21,6 @@
      },
     "remoteUser": "vscode",
     "postStartCommand": "pg_ctl start -D /home/vscode/pgdata -l /home/vscode/postgresql.log",
+    "postAttachCommand": "if [ ! -f /home/vscode/.pg-src-added ]; then code --add /usr/local/src/postgresql && touch /home/vscode/.pg-src-added; fi",
     "forwardPorts": [5432]
 }

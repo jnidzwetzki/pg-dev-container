@@ -22,13 +22,15 @@ Afterward, VSCode downloads the needed base container image, installs the tools,
 
 ## First Start
 
-After the container is built, the PostgreSQL source code that is part of the development container should be added to VSCode. This allows you to browse the source code and perform full-text search from VSCode as well. To import the source code, a new terminal should be opened and the following command should be executed:
+## First Start
+
+After the container is built, the PostgreSQL source code, which is located in `/usr/local/src/postgresql`, to VSCode. This lets you browse the source code and perform full-text search in VSCode. Adding the code is done by the `postAttachCommand` in [`.devcontainer/devcontainer.json`](./.devcontainer/devcontainer.json), which runs the following command automatically on the first start:
 
 ```
 code --add /usr/local/src/postgresql
 ```
 
-_Note:_ VSCode might need to reload the window after executing the command.
+_Note:_ VSCode reloads the window when the source code is added.
 
 For example, you can search for the PostgreSQL function `add_path()` after the header files (`.h`) of the source code is added to VSCode, and you should find some matches.
 
