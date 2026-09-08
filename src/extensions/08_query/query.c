@@ -54,8 +54,13 @@ print_node_walker(Node *node, void *context)
     case T_Query:
     {
         elog(INFO, "Query node found");
-        return query_tree_walker((Query *)node, print_node_walker, context, 0);
-        break;
+
+        /*
+         * QTW_EXAMINE_RTES_BEFORE makes the walker visit the RangeTblEntry
+         * nodes themselves.
+         */
+        return query_tree_walker((Query *)node, print_node_walker, context,
+                                 QTW_EXAMINE_RTES_BEFORE);
     }
     case T_RangeTblEntry:
     {
@@ -68,7 +73,7 @@ print_node_walker(Node *node, void *context)
             elog(INFO, "  RTE: function");
         else if (rte->rtekind == RTE_VALUES)
             elog(INFO, "  RTE: values");
-        break;
+        return false;
     }
     case T_RangeTblRef:
     {

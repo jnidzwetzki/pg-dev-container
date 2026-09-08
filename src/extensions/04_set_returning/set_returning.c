@@ -47,7 +47,7 @@ create_integer_set(PG_FUNCTION_ARGS)
 
     ctx = funcctx->user_fctx;
 
-    if(funcctx->call_cntr < ctx->elements)
+    if(funcctx->call_cntr < (uint64) ctx->elements)
     {
         result = Int32GetDatum(funcctx->call_cntr);
         SRF_RETURN_NEXT(funcctx, result);
@@ -60,12 +60,12 @@ create_integer_set(PG_FUNCTION_ARGS)
 
 typedef struct programming_languages
 {
-    char *name;
-    char *inventor;
+    const char *name;
+    const char *inventor;
     int year;
 } programming_languages;
 
-programming_languages languages[] = 
+static const programming_languages languages[] =
 {
     {"C", "Dennis Ritchie", 1972},
     {"C++", "Bjarne Stroustrup", 1985},
@@ -113,7 +113,7 @@ get_programming_languages(PG_FUNCTION_ARGS)
         Datum		values[3];
         bool		nulls[3] = {0};
         HeapTuple	tuple;
-        programming_languages *lang;
+        const programming_languages *lang;
         Datum result;
 
         lang = &languages[funcctx->call_cntr];

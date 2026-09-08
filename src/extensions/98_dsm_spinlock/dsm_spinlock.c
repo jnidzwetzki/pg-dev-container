@@ -28,7 +28,7 @@ static SpinlockWaitSharedState *sl_wait_state = NULL;
 /* Function prototypes */
 static void slw_init_state(void *ptr);
 static void attach_shm(void);
-static Datum make_spinlock_result(FunctionCallInfo fcinfo, long acquire_ms, long total_ms);
+static Datum make_spinlock_result(FunctionCallInfo fcinfo, int64 acquire_ms, int64 total_ms);
 
 /* Exported functions */
 PG_FUNCTION_INFO_V1(grab_spinlock);

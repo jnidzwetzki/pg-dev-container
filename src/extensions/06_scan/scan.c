@@ -8,6 +8,7 @@
 #include "utils/builtins.h"
 #include "utils/fmgroids.h"
 #include "utils/lsyscache.h"
+#include "utils/memutils.h"
 #include "utils/sortsupport.h"
 #include "utils/syscache.h"
 #include "utils/tuplesort.h"
@@ -46,6 +47,17 @@ static void print_tuple(TupleTableSlot *slot, TupleDesc tupdesc)
     elog(INFO, "==========================");
 }
 
+/*
+ * Create a short-lived memory context for the per-tuple work of print_tuple().
+ */
+static MemoryContext
+create_tuple_context(void)
+{
+    return AllocSetContextCreate(CurrentMemoryContext,
+                                 "scan tuple context",
+                                 ALLOCSET_DEFAULT_SIZES);
+}
+
 PG_FUNCTION_INFO_V1(full_table_scan);
 
 Datum full_table_scan(PG_FUNCTION_ARGS)
@@ -55,6 +67,8 @@ Datum full_table_scan(PG_FUNCTION_ARGS)
     TupleTableSlot *slot;
     TupleDesc tupdesc;
     Snapshot snapshot;
+    MemoryContext tuple_context;
+    MemoryContext old_context;
     Oid relid = PG_ARGISNULL(0) ? InvalidOid : PG_GETARG_OID(0);
 
     if (relid == InvalidOid)
@@ -81,16 +95,22 @@ Datum full_table_scan(PG_FUNCTION_ARGS)
     elog(INFO, "==========================");
 
     /* Iterate through the rows of the table */
+    tuple_context = create_tuple_context();
+
     while (table_scan_getnextslot(tablescandesc, ForwardScanDirection, slot))
     {
         /* The slot should be filled at this point */
         Assert(!TTS_EMPTY(slot));
 
-        /* Log the attributes of each row */
+        /* Log the attributes of each row and free them again */
+        old_context = MemoryContextSwitchTo(tuple_context);
         print_tuple(slot, tupdesc);
+        MemoryContextSwitchTo(old_context);
+        MemoryContextReset(tuple_context);
     }
 
     /* Clean up */
+    MemoryContextDelete(tuple_context);
     table_endscan(tablescandesc);
     UnregisterSnapshot(snapshot);
     ExecDropSingleTupleTableSlot(slot);
@@ -109,6 +129,8 @@ Datum table_scan_with_scankeys(PG_FUNCTION_ARGS)
     TupleDesc tupdesc;
     ScanKeyData scanKeys[2];
     Snapshot snapshot;
+    MemoryContext tuple_context;
+    MemoryContext old_context;
     Oid relid = PG_ARGISNULL(0) ? InvalidOid : PG_GETARG_OID(0);
 
     if (relid == InvalidOid)
@@ -147,16 +169,22 @@ Datum table_scan_with_scankeys(PG_FUNCTION_ARGS)
     elog(INFO, "==========================");
 
     /* Iterate through the rows of the table */
+    tuple_context = create_tuple_context();
+
     while (table_scan_getnextslot(tablescandesc, ForwardScanDirection, slot))
     {
         /* The slot should be filled at this point */
         Assert(!TTS_EMPTY(slot));
 
-        /* Log the attributes of each row */
+        /* Log the attributes of each row and free them again */
+        old_context = MemoryContextSwitchTo(tuple_context);
         print_tuple(slot, tupdesc);
+        MemoryContextSwitchTo(old_context);
+        MemoryContextReset(tuple_context);
     }
 
     /* Clean up */
+    MemoryContextDelete(tuple_context);
     table_endscan(tablescandesc);
     UnregisterSnapshot(snapshot);
     ExecDropSingleTupleTableSlot(slot);
@@ -176,6 +204,8 @@ Datum table_scan_with_index(PG_FUNCTION_ARGS)
     TupleDesc tupdesc;
     ScanKeyData scanKeys[2];
     Snapshot snapshot;
+    MemoryContext tuple_context;
+    MemoryContext old_context;
     Oid relid = PG_ARGISNULL(0) ? InvalidOid : PG_GETARG_OID(0);
     Oid indexrelid = PG_ARGISNULL(1) ? InvalidOid : PG_GETARG_OID(1);
 
@@ -222,16 +252,22 @@ Datum table_scan_with_index(PG_FUNCTION_ARGS)
     elog(INFO, "==========================");
 
     /* Iterate through the rows of the index */
+    tuple_context = create_tuple_context();
+
     while (index_getnext_slot(indexscandesc, ForwardScanDirection, slot))
     {
         /* The slot should be filled at this point */
         Assert(!TTS_EMPTY(slot));
 
-        /* Log the attributes of each row */
+        /* Log the attributes of each row and free them again */
+        old_context = MemoryContextSwitchTo(tuple_context);
         print_tuple(slot, tupdesc);
+        MemoryContextSwitchTo(old_context);
+        MemoryContextReset(tuple_context);
     }
 
     /* Clean up */
+    MemoryContextDelete(tuple_context);
     index_endscan(indexscandesc);
     UnregisterSnapshot(snapshot);
     ExecDropSingleTupleTableSlot(slot);
@@ -260,6 +296,8 @@ Datum table_scan_and_sort_attribute(PG_FUNCTION_ARGS)
     bool sort_nulls_first[1] = {false};
     Snapshot snapshot;
     Tuplesortstate *tuplesortstate;
+    MemoryContext tuple_context;
+    MemoryContext old_context;
 
     if (relid == InvalidOid)
         ereport(ERROR, (errmsg("invalid relation OID")));
@@ -321,14 +359,20 @@ Datum table_scan_and_sort_attribute(PG_FUNCTION_ARGS)
 
     /* Log the sorted tuples */
     sorted_slot = MakeTupleTableSlot(tupdesc, &TTSOpsMinimalTuple);
+    tuple_context = create_tuple_context();
 
     while (tuplesort_gettupleslot(tuplesortstate, true, false, sorted_slot, NULL))
     {
         Assert(!TTS_EMPTY(sorted_slot));
+
+        old_context = MemoryContextSwitchTo(tuple_context);
         print_tuple(sorted_slot, tupdesc);
+        MemoryContextSwitchTo(old_context);
+        MemoryContextReset(tuple_context);
     }
 
     /* Clean up */
+    MemoryContextDelete(tuple_context);
     tuplesort_end(tuplesortstate);
     table_endscan(tablescandesc);
     UnregisterSnapshot(snapshot);

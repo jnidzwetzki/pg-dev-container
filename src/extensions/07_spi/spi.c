@@ -33,7 +33,10 @@ Datum spi_join_catalog_data(PG_FUNCTION_ARGS)
         funcctx = SRF_FIRSTCALL_INIT();
 
         // Initialize the SPI connection and execute the query
-        SPI_connect();
+        if ((ret = SPI_connect()) != SPI_OK_CONNECT)
+            ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
+                            errmsg("SPI_connect failed: %s", SPI_result_code_string(ret))));
+
         ret = SPI_execute("SELECT relname, nspname FROM pg_class JOIN "
                           "pg_namespace ON pg_class.relnamespace = pg_namespace.oid;",
                           true, 0);
