@@ -1,0 +1,140 @@
+-- The extension script only loads the library into the session that runs
+-- CREATE EXTENSION, so load it into this session.
+LOAD 'custom_scan';
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    credit_card_number TEXT
+);
+INSERT INTO customers (name, credit_card_number) VALUES ('Alice', '4111-1111-1111-1111');
+INSERT INTO customers (name, credit_card_number) VALUES ('Bob', '5500 0000 0000 0004');
+INSERT INTO customers (name, credit_card_number) VALUES ('Carol', NULL);
+-- A table without a credit card number column is not affected
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
+    amount NUMERIC
+);
+INSERT INTO orders (customer_id, amount) VALUES (1, 42.00), (1, 13.37), (2, 99.99);
+-- The credit card numbers are masked
+SELECT * FROM customers ORDER BY id;
+ id | name  | credit_card_number  
+----+-------+---------------------
+  1 | Alice | XXXX-XXXX-XXXX-1111
+  2 | Bob   | XXXX XXXX XXXX 0004
+  3 | Carol | 
+(3 rows)
+
+EXPLAIN (COSTS OFF) SELECT * FROM customers;
+             QUERY PLAN              
+-------------------------------------
+ Custom Scan (MaskScan) on customers
+   Masked Column: credit_card_number
+(2 rows)
+
+EXPLAIN (COSTS OFF) SELECT * FROM orders;
+     QUERY PLAN     
+--------------------
+ Seq Scan on orders
+(1 row)
+
+-- The quals are evaluated on the masked values
+SELECT * FROM customers WHERE credit_card_number = '4111-1111-1111-1111';
+ id | name | credit_card_number 
+----+------+--------------------
+(0 rows)
+
+SELECT * FROM customers WHERE credit_card_number LIKE '%1111';
+ id | name  | credit_card_number  
+----+-------+---------------------
+  1 | Alice | XXXX-XXXX-XXXX-1111
+(1 row)
+
+-- An index on the column is not used, since it would return unmasked values
+CREATE INDEX customers_ccn_idx ON customers (credit_card_number);
+SET enable_seqscan = off;
+EXPLAIN (COSTS OFF) SELECT credit_card_number FROM customers WHERE credit_card_number = '4111-1111-1111-1111';
+                          QUERY PLAN                          
+--------------------------------------------------------------
+ Custom Scan (MaskScan) on customers
+   Filter: (credit_card_number = '4111-1111-1111-1111'::text)
+   Masked Column: credit_card_number
+(3 rows)
+
+RESET enable_seqscan;
+-- Joins work as usual
+EXPLAIN (COSTS OFF) SELECT c.name, c.credit_card_number, o.amount FROM customers c JOIN orders o ON c.id = o.customer_id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Hash Join
+   Hash Cond: (o.customer_id = c.id)
+   ->  Seq Scan on orders o
+   ->  Hash
+         ->  Custom Scan (MaskScan) on customers c
+               Masked Column: credit_card_number
+(6 rows)
+
+SELECT c.name, c.credit_card_number, o.amount FROM customers c JOIN orders o ON c.id = o.customer_id ORDER BY o.id;
+ name  | credit_card_number  | amount 
+-------+---------------------+--------
+ Alice | XXXX-XXXX-XXXX-1111 |  42.00
+ Alice | XXXX-XXXX-XXXX-1111 |  13.37
+ Bob   | XXXX XXXX XXXX 0004 |  99.99
+(3 rows)
+
+-- System columns are still available
+SELECT ctid, tableoid::regclass, credit_card_number FROM customers ORDER BY id;
+ ctid  | tableoid  | credit_card_number  
+-------+-----------+---------------------
+ (0,1) | customers | XXXX-XXXX-XXXX-1111
+ (0,2) | customers | XXXX XXXX XXXX 0004
+ (0,3) | customers | 
+(3 rows)
+
+-- A rescan of the custom scan node (inner side of a nested loop join)
+SET enable_hashjoin = off;
+SET enable_mergejoin = off;
+SET enable_material = off;
+EXPLAIN (COSTS OFF) SELECT o.id, c.credit_card_number FROM orders o LEFT JOIN customers c ON c.id = o.customer_id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Nested Loop Left Join
+   Join Filter: (c.id = o.customer_id)
+   ->  Seq Scan on orders o
+   ->  Custom Scan (MaskScan) on customers c
+         Masked Column: credit_card_number
+(5 rows)
+
+SELECT o.id, c.credit_card_number FROM orders o LEFT JOIN customers c ON c.id = o.customer_id ORDER BY o.id;
+ id | credit_card_number  
+----+---------------------
+  1 | XXXX-XXXX-XXXX-1111
+  2 | XXXX-XXXX-XXXX-1111
+  3 | XXXX XXXX XXXX 0004
+(3 rows)
+
+RESET enable_hashjoin;
+RESET enable_mergejoin;
+RESET enable_material;
+-- Limitations: statements that do not use the custom scan node see the stored values
+COPY customers TO STDOUT;
+1	Alice	4111-1111-1111-1111
+2	Bob	5500 0000 0000 0004
+3	Carol	\N
+COPY (SELECT * FROM customers ORDER BY id) TO STDOUT;
+1	Alice	XXXX-XXXX-XXXX-1111
+2	Bob	XXXX XXXX XXXX 0004
+3	Carol	\N
+EXPLAIN (COSTS OFF) SELECT * FROM customers FOR UPDATE;
+         QUERY PLAN          
+-----------------------------
+ LockRows
+   ->  Seq Scan on customers
+(2 rows)
+
+UPDATE customers SET name = name WHERE id = 1 RETURNING credit_card_number;
+ credit_card_number  
+---------------------
+ 4111-1111-1111-1111
+(1 row)
+
