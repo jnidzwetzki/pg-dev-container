@@ -1,0 +1,4 @@
+comment = 'Custom scan proxy example'
+default_version = '1.0'
+relocatable = true
+module_pathname = '$libdir/custom_scan_proxy'
